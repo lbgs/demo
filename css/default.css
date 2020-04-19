@@ -109,3 +109,23 @@ body {
 #copyright a {
     color: #666
 }
+
+@media screen and (max-width:1080px) {
+    #content {
+        transform: scale(1.5)
+    }
+    #code,
+    #loveHeart {
+        float: none;
+        width: 100vw;
+        margin-left: 20rem;
+    }
+    #code{
+        margin-left: 35rem;
+        height: 250px;
+    }
+    #words {
+        top: 24vh !important;
+        left: 32vh !important;
+    }
+}

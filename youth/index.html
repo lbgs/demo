@@ -121,6 +121,7 @@
     let moveX = 0, moveY = 0;
     let roateNum = [];
     main.addEventListener('touchstart', function (el) {
+        el.preventDefault();
         let rotateData = main.style.transform.split(' ');
         roateNum = rotateData.map(item => parseInt(item.substring(item.indexOf("(") + 1, item.indexOf("d"))));
         startX = el.touches[0].clientX;

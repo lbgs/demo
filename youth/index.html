@@ -47,10 +47,38 @@
             background-color: rgba(255, 0, 0, .6);
             transform: translateZ(50px);
         }
+
+        .select {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 80%;
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 10%;
+        }
+
+        .select button {
+            width: 40%;
+            background-color: #fff;
+            border: 0;
+            padding: 5px;
+            border-radius: 10px;
+            outline: 0;
+        }
+
+        .select button:focus {
+            background-color: DeepSkyBlue;
+            color: white;
+        }
     </style>
 </head>
 
 <body>
+    <!-- <div class="select">
+        <button class='btn' data-id="0">触摸</button>
+        <button class='btn' data-id="1">手机移动</button>
+    </div> -->
     <div class="main" id="main" style="transform: rotateX(-20deg) rotateY(-20deg)"></div>
 </body>
 <script>
@@ -118,22 +146,45 @@
         }
         return a;
     };
+
+    // 事件选择
+    // btns = document.querySelectorAll('.btn');
+    // btns.forEach(element => {
+    //     element.addEventListener('click', function (e) {
+    //         // element.getAttribute('data-id') == 1 ? gyroscope() : touch();
+    //         let id = element.getAttribute('data-id');
+    //         tougyr(id);
+    //     });
+    // });
+    touch();
+    gyroscope();
+
     // 触摸事件
-    let startX = 0, startY = 0;
-    let moveX = 0, moveY = 0;
-    let roateNum = [];
-    main.addEventListener('touchstart', function (el) {
-        el.preventDefault();
-        let rotateData = main.style.transform.split(' ');
-        roateNum = rotateData.map(item => parseInt(item.substring(item.indexOf("(") + 1, item.indexOf("d"))));
-        startX = el.touches[0].clientX;
-        startY = el.touches[0].clientY;
-    })
-    main.addEventListener('touchmove', function (el) {
-        moveX = el.touches[0].clientX - startX;
-        moveY = el.touches[0].clientY - startY;
-        main.style.transform = `rotateX(${roateNum[0] - moveY}deg) rotateY(${roateNum[1] + moveX}deg)`
-    })
+    function touch() {
+        let startX = 0, startY = 0;
+        let moveX = 0, moveY = 0;
+        let roateNum = [];
+        main.addEventListener('touchstart', function (el) {
+            el.preventDefault();
+            let rotateData = main.style.transform.split(' ');
+            roateNum = rotateData.map(item => parseInt(item.substring(item.indexOf("(") + 1, item.indexOf("d"))));
+            startX = el.touches[0].clientX;
+            startY = el.touches[0].clientY;
+        })
+        main.addEventListener('touchmove', function (el) {
+            moveX = el.touches[0].clientX - startX;
+            moveY = el.touches[0].clientY - startY;
+            main.style.transform = `rotateX(${roateNum[0] - moveY}deg) rotateY(${roateNum[1] + moveX}deg)`;
+        })
+    }
+
+    //陀螺仪
+    function gyroscope() {
+        window.addEventListener('deviceorientation', function (e) {
+            main.style.transform = `rotateX(${-e.beta}deg) rotateY(${e.gamma}deg)`;
+        });
+    }
+
 </script>
 
 </html>

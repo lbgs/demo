@@ -75,10 +75,10 @@
 </head>
 
 <body>
-    <!-- <div class="select">
+    <div class="select">
         <button class='btn' data-id="0">触摸</button>
         <button class='btn' data-id="1">手机移动</button>
-    </div> -->
+    </div>
     <div class="main" id="main" style="transform: rotateX(-20deg) rotateY(-20deg)"></div>
 </body>
 <script>
@@ -148,43 +148,49 @@
     };
 
     // 事件选择
-    // btns = document.querySelectorAll('.btn');
-    // btns.forEach(element => {
-    //     element.addEventListener('click', function (e) {
-    //         // element.getAttribute('data-id') == 1 ? gyroscope() : touch();
-    //         let id = element.getAttribute('data-id');
-    //         tougyr(id);
-    //     });
-    // });
-    touch();
-    gyroscope();
-
-    // 触摸事件
-    function touch() {
-        let startX = 0, startY = 0;
-        let moveX = 0, moveY = 0;
-        let roateNum = [];
-        main.addEventListener('touchstart', function (el) {
-            el.preventDefault();
-            let rotateData = main.style.transform.split(' ');
-            roateNum = rotateData.map(item => parseInt(item.substring(item.indexOf("(") + 1, item.indexOf("d"))));
-            startX = el.touches[0].clientX;
-            startY = el.touches[0].clientY;
-        })
-        main.addEventListener('touchmove', function (el) {
-            moveX = el.touches[0].clientX - startX;
-            moveY = el.touches[0].clientY - startY;
-            main.style.transform = `rotateX(${roateNum[0] - moveY}deg) rotateY(${roateNum[1] + moveX}deg)`;
-        })
-    }
-
-    //陀螺仪
-    function gyroscope() {
-        window.addEventListener('deviceorientation', function (e) {
-            main.style.transform = `rotateX(${-e.beta}deg) rotateY(${e.gamma}deg)`;
+    let roateNum = [];
+    btns = document.querySelectorAll('.btn');
+    btns.forEach(element => {
+        element.addEventListener('click', function (e) {
+            let id = element.getAttribute('data-id');
+            if (id == 1) {
+                roateNum = end();
+                main.removeEventListener('touchmove', move);
+                //陀螺仪
+                window.addEventListener('deviceorientation', gyroscope);
+            } else {
+                window.removeEventListener('deviceorientation', gyroscope);
+                main.addEventListener('touchstart', start);
+                main.addEventListener('touchmove', move);
+                main.addEventListener('touchend', end);
+            }
         });
-    }
+    });
+    // 触摸事件
+    let startX = 0, startY = 0;
+    let moveX = 0, moveY = 0;
 
+    function start(el) {
+        el.preventDefault();
+        roateNum = end();
+        startX = el.touches[0].clientX;
+        startY = el.touches[0].clientY;
+    }
+    function move(el) {
+        moveX = el.touches[0].clientX - startX;
+        moveY = el.touches[0].clientY - startY;
+        main.style.transform = `rotateX(${roateNum[0] - moveY}deg) rotateY(${roateNum[1] + moveX}deg)`;
+    }
+    function end() {
+        let rotateData = main.style.transform.split(' ');
+        return rotateData.map(item => parseInt(item.substring(item.indexOf("(") + 1, item.indexOf("d"))));
+    }
+    // 陀螺仪
+    function gyroscope(e) {
+        let x = roateNum[0];
+        let y = roateNum[1];
+        main.style.transform = `rotateX(${-e.beta + x}deg) rotateY(${e.gamma + y}deg)`;
+    }
 </script>
 
 </html>

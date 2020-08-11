@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>饼状图</title>
+    <style>
+        #canvas {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+<script>
+    window.onload = function () {
+        let data = [{
+            value: 34,
+            color: '#00CDCD'
+        }, {
+            value: 29,
+            color: '#66CD00'
+        }, {
+            value: 19,
+            color: '#EEEE00'
+        }, {
+            value: 30,
+            color: '#EE6363'
+        }, {
+            value: 34,
+            color: '#FF4500'
+        }, {
+            value: 30,
+            color: '#EE6363'
+        }, {
+            value: 34,
+            color: '#FF4500'
+        }, {
+            value: 30,
+            color: '#EE6363'
+        }, {
+            value: 34,
+            color: '#FF4500'
+        }];
+
+        /** @type {HTMLCanvasElement} */
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        canvas.width = 1200;
+        canvas.height = 600;
+        canvas.style.border = '1px solid red'
+
+        let sum = 0;
+        data.forEach(item => sum += item.value);
+        let x0 = 300, y0 = 300, r = 100, tempAngle = -90, rad = Math.PI / 180;
+        ctx.lineWidth = 50
+
+        data.forEach(item => {
+            let angle = item.value / sum * 360;
+            ctx.arc(x0, y0, r, tempAngle * rad, (tempAngle + angle) * rad);
+            ctx.strokeStyle = rndColor();
+            ctx.stroke();
+            let x = x0 + Math.cos((tempAngle + angle / 2) * rad) * (r + 40);
+            let y = y0 + Math.sin((tempAngle + angle / 2) * rad) * (r + 40);
+            ctx.font = '14px 微软雅黑';
+            if (tempAngle > 90 && tempAngle < 270) {
+                ctx.textAlign = 'right'
+            }
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`${(item.value / sum * 100).toFixed(2)}%`, x, y);
+            ctx.beginPath();
+            tempAngle += angle;
+        })
+
+        //动画
+        tempAngle = -90
+        let index = tempAngle, i = 0;
+        let temp = 0;
+        let sumAngle = 0;
+        ctx.strokeStyle = rndColor();
+        let timeInt = setInterval(() => {
+            let angle = data[i].value / sum * 360;
+            if (index >= tempAngle + angle) {
+                ctx.strokeStyle = rndColor();
+                index = tempAngle += angle
+                i++
+                if (i == data.length) {
+                    clearInterval(timeInt)
+                }
+            }
+            let x = x0 + Math.cos((tempAngle) * rad) * r;
+            let y = y0 + Math.sin((tempAngle) * rad) * r;
+            ctx.moveTo(x + 500, y);
+            ctx.arc(x0 + 500, y0, r, tempAngle * rad, index * rad);
+            ctx.stroke();
+            ctx.beginPath();
+            index += 0.1;
+
+        }, 1);
+    }
+
+    function rndColor() {
+        let r = Math.floor(Math.random() * 265);
+        let g = Math.floor(Math.random() * 265);
+        let b = Math.floor(Math.random() * 265);
+        return `rgb(${r},${g},${b})`
+    }
+</script>
+
+</html>

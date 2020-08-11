@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>动画</title>
+	<style>
+		.box {
+			width: 200px;
+			height: 200px;
+			position: absolute;
+			top: 100px;
+			background-color: #f5e;
+		}
+
+		.ams {
+			transition: all .5;
+		}
+	</style>
+</head>
+
+<body>
+	<button id="btn">按钮</button>
+	<div class="box" style="left: 20px;"></div>
+</body>
+<script>
+	window.onload = function () {
+		let btn = document.getElementById('btn');
+		btn.addEventListener('click', function () {
+			console.log('log');
+			requestAnimationFrame(animationWidth);
+		})
+	}
+	function animationWidth() {
+		let box = document.querySelector('.box');
+		let boxLeft = parseInt(box.style.left);
+		box.style.left = `${boxLeft + 1}px`;
+		// box.className = 'box ams'
+		console.log(box.style.width);
+		if(boxLeft < 400){
+			requestAnimationFrame(animationWidth);
+		}
+	}
+</script>
+
+</html>

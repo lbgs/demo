@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>饼状图</title>
+</head>
+
+<body>
+    <div id="container"></div>
+</body>
+<script src="https://unpkg.com/konva@6.0.0/konva.min.js"></script>
+<script>
+    (function () {
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+
+        let stage = new Konva.Stage({
+            container: 'container',
+            width: width,
+            height: height,
+        })
+
+        let cenX = width / 2;
+        let cenY = height / 2;
+
+        let data = [
+            { value: 34, color: '#274' },
+            { value: 64, color: '#a25' },
+            { value: 22, color: '#ca5' },
+            { value: 89, color: '#198' },
+            { value: 36, color: '#a0e' },
+        ]
+        let sum = 0;
+        data.forEach(item => { sum += item.value })
+        let layer = new Konva.Layer();
+        stage.add(layer);
+        let groupWedge = new Konva.Group()
+        let groupText = new Konva.Group()
+        let tempAngle = -90;
+        data.forEach(item => {
+            let angle = item.value / sum * 360
+            let wedge = new Konva.Wedge({
+                x: cenX,
+                y: cenY,
+                radius: 200,
+                angle: angle,
+                fill: item.color,
+                rotation: tempAngle
+            })
+            groupWedge.add(wedge)
+            let textAngel = (tempAngle + angle / 2);
+            let text = new Konva.Text({
+                x: cenX + 220 * Math.cos(textAngel * Math.PI / 180),
+                y: cenY + 220 * Math.sin(textAngel * Math.PI / 180),
+                text: `${(item.value / sum * 100).toFixed(2)}%`,
+                fill: 'rgba(0,0,0,0)',
+                fontSize: 20
+            })
+            if (textAngel >= 90 && textAngel <= 270) {
+                text.x(text.x() - text.getWidth())
+            }
+            groupText.add(text)
+            tempAngle += angle
+        })
+        layer.add(groupWedge)
+        layer.add(groupText)
+        layer.draw();
+
+        // 动画系统
+        let children = groupWedge.getChildren();
+        let textChildren = groupText.getChildren();
+        let index = 0;
+        let time = 3
+        children.forEach(item => { item.angle(0) })
+        function amin() {
+            if (index >= children.length) {
+                return;
+            }
+
+            children[index].to({
+                angle: data[index].value / sum * 360,
+                duration: data[index].value / sum * time,
+                onFinish: () => {
+                    textChildren[index].fill(data[index].color)
+                    index++;
+                    amin()
+                }
+            })
+        }
+        amin()
+    }())
+</script>
+
+</html>

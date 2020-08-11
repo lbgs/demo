@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贪吃蛇</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+</body>
+<script src="https://unpkg.com/konva@6.0.0/konva.min.js"></script>
+<script>
+    (function () {
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+
+        let stage = new Konva.Stage({
+            container: 'container',
+            width: width,
+            height: height
+        })
+        let cenX = width / 4;
+        let cenY = height / 6;
+        let lineX = lineY = 10;
+
+        let layer = new Konva.Layer();
+        stage.add(layer);
+        let group = new Konva.Group({
+            x: cenX,
+            y: cenY
+        })
+        let rect = new Konva.Rect({
+            x: 0,
+            y: 0,
+            width: 800,
+            height: 500,
+            stroke: 'black'
+        })
+        group.add(rect)
+        let snake = new Konva.Rect({
+            x: 100,
+            y: 100,
+            width: 30,
+            height: 30,
+            fill: 'red'
+        })
+
+        group.add(snake)
+
+        layer.add(group)
+
+        layer.draw();
+
+        snake.to({
+            x: 300,
+            duration: 0.1
+        })
+
+        // velocity = 50;
+        // let anim = new Konva.Animation(frame => {
+        //     var dist = velocity * frame.timeDiff / 1000;
+        //     snake.to({
+        //         x: dist
+        //     })
+        //     // snake.x(dist)
+        // })
+        // anim.start();
+    }())
+</script>
+
+</html>

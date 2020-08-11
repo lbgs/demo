@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>进度条</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+</body>
+<script src="https://unpkg.com/konva@6.0.0/konva.min.js"></script>
+<script>
+    (function () {
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+
+        var stage = new Konva.Stage({
+            container: 'container',
+            width: width,
+            height: height,
+        })
+
+        var layer = new Konva.Layer();
+
+        var rect1 = new Konva.Rect({
+            x: width * 1 / 8,
+            y: height / 2,
+            width: 0,
+            height: height * 1 / 12,
+            cornerRadius: height * 1 / 24,
+            fill: '#f46'
+
+        });
+        // add the shape to the layer
+        layer.add(rect1);
+
+        var rect2 = new Konva.Rect({
+            x: width * 1 / 8,
+            y: height / 2,
+            width: 3 / 4 * width,
+            height: height * 1 / 12,
+            cornerRadius: height * 1 / 24,
+            stroke: '#34f',
+            strokeWidth: 4
+
+        })
+        layer.add(rect2)
+
+        rect1.to({
+            width: width * 3 / 4,
+            duration: 10
+        })
+
+
+        //讲层添加到舞台
+        stage.add(layer)
+    }())
+</script>
+
+</html>
